@@ -1,1 +1,2 @@
-full-outer-join.awk - Perform a full outer join on tab-delimited files
+full-outer-join.awk - perform a full outer join on tab-delimited files
+table-avg.awk       - average each field from a list of input files
