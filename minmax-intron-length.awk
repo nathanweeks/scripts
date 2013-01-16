@@ -19,7 +19,7 @@
 #     is '-'.
 #
 # STDOUT
-#     Two space-separated integers:
+#     Two tab-separated integers:
 #         MINIMUM_INTRON_LENGTH MAXIMUM_INTRON_LENGTH
 #
 # EXAMPLES
@@ -46,7 +46,7 @@
 #     Nathan Weeks <nathan.weeks@ars.usda.gov>
 
 BEGIN { 
-    FS = "\t"
+    FS = OFS = "\t"
     max_intron_length = 0
     min_intron_length = 9999999999
 }
