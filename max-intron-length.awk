@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # NAME
-#     max-intron-length.awk - Determine max intron length from CDS in GFF3
+#     max-intron-length.awk - determine max intron length from CDS in GFF3
 #
 # SYNOPSIS
 #     max-intron-length.awk [GFF...]
