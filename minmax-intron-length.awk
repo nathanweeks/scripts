@@ -1,9 +1,9 @@
 #!/usr/bin/awk -f
 # NAME
-#     max-intron-length.awk - determine max intron length from CDS in GFF3
+#     minmax-intron-length.awk - min & max intron lengths from CDS in GFF3 files
 #
 # SYNOPSIS
-#     max-intron-length.awk [GFF...]
+#     minmax-intron-length.awk [GFF...]
 #
 # OPERANDS
 #     GFF
@@ -19,7 +19,8 @@
 #     is '-'.
 #
 # STDOUT
-#     An integer representing the maximum intron length.
+#     Two space-separated integers:
+#         MINIMUM_INTRON_LENGTH MAXIMUM_INTRON_LENGTH
 #
 # EXAMPLES
 #     $ cat test.gff
@@ -38,13 +39,17 @@
 #     Gm01	Glyma1	mRNA	8775304	8775489	0	-	.	ID=Glyma01g07880.1;Name=Glyma01g07880.1
 #     Gm01	Glyma1	CDS	8775373	8775489	0	-	0	Parent=Glyma01g07880.1
 #     Gm01	Glyma1	CDS	8775304	8775318	0	-	0	Parent=Glyma01g07880.1
-#     $ max-intron-length.awk test.gff
-#     1091
+#     $ minmax-intron-length.awk test.gff
+#     54 1091
 #
 # AUTHOR
 #     Nathan Weeks <nathan.weeks@ars.usda.gov>
 
-BEGIN { FS = "\t" }
+BEGIN { 
+    FS = "\t"
+    max_intron_length = 0
+    min_intron_length = 9999999999
+}
 
 /^#/ && NF != 9 { next } # skip blank lines & comment lines
 
@@ -59,8 +64,10 @@ $3 == "CDS" {
         start = $5 # start <- end of this CDS
     }
 
+    if (intron_length > 0 && intron_length < min_intron_length)
+        min_intron_length = intron_length
     if (intron_length > max_intron_length)
         max_intron_length = intron_length
 }
 
-END { print max_intron_length }
+END { print min_intron_length, max_intron_length }
