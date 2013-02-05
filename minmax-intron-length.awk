@@ -3,12 +3,26 @@
 #     minmax-intron-length.awk - min & max intron lengths from CDS in GFF3 files
 #
 # SYNOPSIS
-#     minmax-intron-length.awk [REPORT_CDS=1] [GFF...]
+#     minmax-intron-length.awk [REPORT_CDS=1]
+#                              [WARN_INTRON_LESS_THAN=min_intron_length]
+#                              [WARN_INTRON_GREATER_THAN=max_intron_length]
+#                              [GFF...]
 #
 # OPTIONS
 #     REPORT_CDS
 #         If set to 1, the CDS features flanking the smallest & largest
-#         introns are output to stderr.
+#         introns are output to stderr. The first detected flanking CDS
+#         features for the given intron size are reported.
+#
+#     WARN_INTRON_LESS_THAN=min_intron_length
+#         Issue a warning & print flanking CDSs to stderr if an intron smaller
+#         than min_intron_length is detected. Does not affect the reported
+#         minimum intron size.
+#
+#     WARN_INTRON_GREATER_THAN=max_intron_length
+#         Issue a warning & print flanking CDSs to stderr if an intron longer
+#         than max_intron_length is detected. Does not affect the reported
+#         maximum intron size.
 #
 # OPERANDS
 #     GFF
@@ -48,7 +62,8 @@
 #     54 1091
 #
 # CHANGE HISTORY
-#     2013-02-05    Added the REPORT_CDS option.
+#     2013-02-05    Added the REPORT_CDS, WARN_INTRON_LESS_THAN, and
+#                   WARN_INTRON_GREATER_THAN options.
 #      
 # AUTHOR
 #     Nathan Weeks <nathan.weeks@ars.usda.gov>
@@ -72,20 +87,29 @@ $3 == "CDS" {
         start = $5 # start <- end of this CDS
     }
 
-    if (intron_length > 0 && intron_length < min_intron_length)
+    if (intron_length > 0 && intron_length < min_intron_length) {
         min_intron_length = intron_length
-    if (intron_length > max_intron_length)
-        max_intron_length = intron_length
-}
-
-REPORT_CDS && $3 == "CDS" {
-    if (min_intron_length == intron_length) {
         min_intron_cds1 = prev_cds
         min_intron_cds2 = $0
     }
-    if (max_intron_length == intron_length) {
+    if (intron_length > max_intron_length) {
+        max_intron_length = intron_length
         max_intron_cds1 = prev_cds
         max_intron_cds2 = $0
+    }
+
+    if (intron_length > 0 && intron_length < WARN_INTRON_LESS_THAN) {
+        print "intron length (" intron_length ") < WARN_INTRON_LESS_THAN (" \
+              WARN_INTRON_LESS_THAN "):" | "cat 1>&2"
+        print prev_cds | "cat 1>&2"
+        print $0 | "cat 1>&2"
+    }
+
+    if (WARN_INTRON_GREATER_THAN && intron_length > WARN_INTRON_GREATER_THAN) {
+        print "intron length (" intron_length ") > WARN_INTRON_GREATER_THAN (" \
+              WARN_INTRON_GREATER_THAN "):" | "cat 1>&2"
+        print prev_cds | "cat 1>&2"
+        print $0 | "cat 1>&2"
     }
 
     prev_cds = $0
