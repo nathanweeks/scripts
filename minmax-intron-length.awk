@@ -70,6 +70,7 @@
 
 BEGIN { 
     FS = OFS = "\t"
+    stderr = "cat 1>&2"
     max_intron_length = 0
     min_intron_length = 9999999999
 }
@@ -100,16 +101,16 @@ $3 == "CDS" {
 
     if (intron_length > 0 && intron_length < WARN_INTRON_LESS_THAN) {
         print "intron length (" intron_length ") < WARN_INTRON_LESS_THAN (" \
-              WARN_INTRON_LESS_THAN "):" | "cat 1>&2"
-        print prev_cds | "cat 1>&2"
-        print $0 | "cat 1>&2"
+              WARN_INTRON_LESS_THAN "):" | stderr
+        print prev_cds | stderr
+        print $0 | stderr
     }
 
     if (WARN_INTRON_GREATER_THAN && intron_length > WARN_INTRON_GREATER_THAN) {
         print "intron length (" intron_length ") > WARN_INTRON_GREATER_THAN (" \
-              WARN_INTRON_GREATER_THAN "):" | "cat 1>&2"
-        print prev_cds | "cat 1>&2"
-        print $0 | "cat 1>&2"
+              WARN_INTRON_GREATER_THAN "):" | stderr
+        print prev_cds | stderr
+        print $0 | stderr
     }
 
     prev_cds = $0
@@ -119,11 +120,11 @@ $3 == "CDS" {
 END { 
     print min_intron_length, max_intron_length
     if (REPORT_CDS) {
-        print "min intron (" min_intron_length "):" | "cat 1>&2"
-        print min_intron_cds1 | "cat 1>&2"
-        print min_intron_cds2 | "cat 1>&2"
-        print "max intron (" max_intron_length "):" | "cat 1>&2"
-        print max_intron_cds1 | "cat 1>&2"
-        print max_intron_cds2 | "cat 1>&2"
+        print "min intron (" min_intron_length "):" | stderr
+        print min_intron_cds1 | stderr
+        print min_intron_cds2 | stderr
+        print "max intron (" max_intron_length "):" | stderr
+        print max_intron_cds1 | stderr
+        print max_intron_cds2 | stderr
     }
 }
