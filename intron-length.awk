@@ -4,7 +4,7 @@
 #
 # SYNOPSIS
 #     intron-length.awk [TYPE=CDS|exon]
-#                       [REPORT_FLANKING=1]
+#                       [SHOW_FLANKING=1]
 #                       [WARN_INTRON_LESS_THAN=min_intron_length]
 #                       [WARN_INTRON_GREATER_THAN=max_intron_length]
 #                       [GFF...]
@@ -19,7 +19,7 @@
 #         GFF3 type (3rd-column); valid values are "CDS" and "exon" (default).
 #         Introns are calculated as gaps between features if this type.
 #
-#     REPORT_FLANKING
+#     SHOW_FLANKING
 #         If set to 1, the features of type TYPE flanking the smallest &
 #         largest introns are output to stderr. The first detected flanking
 #         features for the given intron size are reported.
@@ -78,16 +78,17 @@
 #
 # FUTURE DIRECTIONS
 #     five_prime_utr/three_prime_utr features will likely be supported in the
-#     future.
+#     future for TYPE=CDS.
 #
 # SEE ALSO
 #     GMAP (http://research-pub.gene.com/gmap/)
 #
 # CHANGE HISTORY
+#     2013-04-11    Renamed option REPORT_FLANKING to SHOW_FLANKING.
 #     2013-04-10    Report the largest sum-of-intron-lengths seen for any
 #                   mRNA feature.
 #                   Added TYPE option.
-#                   REPORT_CDS option renamed to REPORT_FLANKING.
+#                   REPORT_CDS option renamed to SHOW_FLANKING.
 #     2013-02-05    Added the REPORT_CDS, WARN_INTRON_LESS_THAN, and
 #                   WARN_INTRON_GREATER_THAN options.
 #
@@ -150,7 +151,7 @@ TYPE ? $3 == TYPE : $3 == "exon" {
 
 END { 
     print min_intron_length, max_intron_length, max_sum_intron_lengths
-    if (REPORT_FLANKING) {
+    if (SHOW_FLANKING) {
         print "min intron (" min_intron_length "):" | stderr
         print min_intron_feature1 | stderr
         print min_intron_feature2 | stderr
