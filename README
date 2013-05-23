@@ -1,5 +1,6 @@
-fastq-q2-trim.awk        - trim Q2 bases from Illumina 1.5+ FASTQ
-full-outer-join.awk      - perform a full outer join on tab-delimited files
-intron-length.awk        - report intron lengths from GFF3 input
-seqlen.awk               - Print length of sequences from FASTA input
-table-avg.awk            - average each field from a list of input files
+fastq-q2-trim.awk   - trim Q2 bases from Illumina 1.5+ FASTQ
+full-outer-join.awk - perform a full outer join on tab-delimited files
+intron-length.awk   - report intron lengths from GFF3 input
+seqlen.awk          - print length of sequences from FASTA input
+splitseq.awk        - split a FASTA sequence into N non-overlapping subsequences
+table-avg.awk       - average each field from a list of input files
