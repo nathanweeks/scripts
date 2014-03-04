@@ -105,6 +105,8 @@
 #       300	G	T	T	A
 #      
 # CHANGE HISTORY
+#     2014-03-04    Fix header-display bug where only the header from the
+#                   first file was displayed.
 #     2013-01-29    Bug fixes for changes in 2013-01-28 version.
 #     2013-01-28    Make the header row optional, disabled by default and 
 #                   enabled by the "HEADER=1" operand. Add a SORT_OPTIONS
@@ -127,10 +129,10 @@ NR == 1 && HEADER { header[1] = $1 }
 
 FNR == 1 {
     num_fields_in_file = NF
-    degree += (degree ? NF-1 : NF) # count join field once
     if (HEADER)
         for (column = 2; column <= NF; column++)
-            header[column] = $column
+            header[column+(degree == 0 ? 0 : degree - 1)] = $column
+    degree += (degree ? NF-1 : NF) # count join field once
 }
 
 !HEADER || (HEADER && FNR > 1) {
