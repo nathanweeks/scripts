@@ -84,6 +84,7 @@
 #     GMAP (http://research-pub.gene.com/gmap/)
 #
 # CHANGE HISTORY
+#     2014-10-29    Handle gene features without mRNA subfeatures.
 #     2013-04-11    Renamed option REPORT_FLANKING to SHOW_FLANKING.
 #     2013-04-10    Report the largest sum-of-intron-lengths seen for any
 #                   mRNA feature.
@@ -104,7 +105,7 @@ BEGIN {
 
 /^#/ || NF == 0 { next } # comments, pragmas, and blank lines
 
-$3 == "mRNA" { start = 0; end = 0; total_intron_length = 0 }
+$3 == "mRNA" || $3 == "gene" { start = end = total_intron_length = 0 }
 
 TYPE ? $3 == TYPE : $3 == "exon" {
     if ($7 == "-") {
